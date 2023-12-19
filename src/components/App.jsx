@@ -1,46 +1,54 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 
-const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [filter, setFilter] = useState('');
+class App extends Component {
+  state = {
+    contacts: [],
+    filter: '',
+  };
 
-  const addContact = (name, number) => {
+  addContact = (name, number) => {
+    const { contacts } = this.state;
+
     if (contacts.some(contact => contact.name.toLowerCase() === name.toLowerCase())) {
       alert('Contact with this name already exists!');
       return;
     }
 
     const newContact = { id: nanoid(), name, number };
-    setContacts([...contacts, newContact]);
+    this.setState({ contacts: [...contacts, newContact] });
   };
 
-  const deleteContact = (id) => {
+  deleteContact = (id) => {
+    const { contacts } = this.state;
     const updatedContacts = contacts.filter(contact => contact.id !== id);
-    setContacts(updatedContacts);
+    this.setState({ contacts: updatedContacts });
   };
 
-  const handleFilterChange = (value) => {
-    setFilter(value);
+  handleFilterChange = (value) => {
+    this.setState({ filter: value });
   };
 
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  render() {
+    const { contacts, filter } = this.state;
+    const filteredContacts = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
 
-  return (
-    <div className="container">
-      <h1>Phonebook</h1>
-      <ContactForm addContact={addContact} />
-      
-      <h2>Contacts</h2>
-      <Filter filter={filter} onFilterChange={handleFilterChange} />
-      <ContactList contacts={filteredContacts} onDeleteContact={deleteContact} />
-    </div>
-  );
-};
+    return (
+      <div className="container">
+        <h1>Phonebook</h1>
+        <ContactForm addContact={this.addContact} />
+
+        <h2>Contacts</h2>
+        <Filter filter={filter} onFilterChange={this.handleFilterChange} />
+        <ContactList contacts={filteredContacts} onDeleteContact={this.deleteContact} />
+      </div>
+    );
+  }
+}
 
 export default App;
