@@ -1,20 +1,23 @@
+// App.js
+
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
-import ContactForm from './ContactForm/ContactForm';
-import ContactList from './ContactList/ContactList';
-import Filter from './Filter/Filter';
+import ContactForm from './ContactForm';
+import ContactList from './ContactList';
+import Filter from './Filter';
+import './App.css';
 
 const App = () => {
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
 
-  const addContact = (name) => {
+  const addContact = (name, number) => {
     if (contacts.some(contact => contact.name.toLowerCase() === name.toLowerCase())) {
       alert('Contact with this name already exists!');
       return;
     }
 
-    const newContact = { id: nanoid(), name };
+    const newContact = { id: nanoid(), name, number };
     setContacts([...contacts, newContact]);
   };
 
